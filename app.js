@@ -1,13 +1,20 @@
+const config = require('./config/index');
 const Koa = require('koa');
 const path = require('path');
 const nunjucks = require('koa-nunjucks-2');
 const bodyParser = require('koa-bodyparser');
-const router = require('router/index');
+// 引入 koa-static
+const staticFiles = require('koa-static');
+const router = require('./router/index');
 /*// 注意require('koa-router')返回的是函数:
 const router = require('koa-router')();*/
 
 const app = new Koa();
-console.log('路径', __dirname, path.join(__dirname, 'views'));
+
+// 指定 public目录为静态资源目录，用来存放 js css /koa2/images 等
+app.use(staticFiles(path.resolve(__dirname, "./public")))
+
+// console.log('路径', __dirname, path.join(__dirname, 'views'));
 app.use(nunjucks({
     ext: 'html',
     path: path.join(__dirname, 'views'),// 指定视图目录
@@ -57,5 +64,5 @@ router(app);
     ctx.response.body = '<h1>Hello, koa2!</h1>' + `${ctx.request.method} : ${ctx.request.url}`;
 });*/
 
-app.listen(3000);
-console.log('server is running at http://localhost:3000');
+app.listen(config.port);
+console.log('server is running at http://localhost:' + config.port);

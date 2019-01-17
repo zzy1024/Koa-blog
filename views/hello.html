@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>hello页面</title>
+    <link rel=stylesheet href="/css/hello.css" />
 </head>
 <body>
-
+    <img class="logo" width="300" src="/img/logo.png" />
+    <h1>一个前端爱用的后端框架</h1>
+    <p>一个十分具有表现力的 NODE HTTP 中间件框架.</p>
+    你的名字：{{userName}}<br/>
+    <form action="/signin" method="post">
+        <p>Name: <input name="name" value="root"></p>
+        <p>Password: <input name="password" type="password"></p>
+        <p><input type="submit" value="Submit"></p>
+    </form>
 </body>
 </html>
