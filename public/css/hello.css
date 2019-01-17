@@ -1,3 +1,5 @@
 body{background:#fff; text-align: center;}
 h1{color:#555;}
 .logo{width:300px;}
+.userTable{margin:0 auto;width:220px;}
+td{border:1px solid #ccc;margin-left:-1px;marign-top:-1px;}

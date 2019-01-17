@@ -1,3 +1,5 @@
+const {query} = require('../lib/mysql');
+
 module.exports = {
     helloName: async (ctx, next) => {
         let name = ctx.params.name;
@@ -5,8 +7,15 @@ module.exports = {
     },
     index: async (ctx, next) => {
         console.log('hello,world。');
+        const userInfo = await query( 'SELECT * FROM users' );
+            /*function () {
+            let sql = 'SELECT * FROM users'
+            let dataList = await query( sql )
+        };*/
+            console.log(userInfo,userInfo.length);
         const s = await ctx.render('hello', {
-            userName: 'GoGoGo'
+            userName: 'GoGoGo',
+            userInfo: userInfo
         });
         console.log(s);
         /*ctx.response.body = `<h1>Index</h1>

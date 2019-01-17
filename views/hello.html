@@ -9,7 +9,21 @@
     <img class="logo" width="300" src="/img/logo.png" />
     <h1>一个前端爱用的后端框架</h1>
     <p>一个十分具有表现力的 NODE HTTP 中间件框架.</p>
-    你的名字：{{userName}}<br/>
+    现在有的用户列表：
+    <div style="text-align: center;">
+        <table cellpadding="0" cellspacing="0" class="userTable">
+            <tr>
+                <td>用户名</td>
+                <td>密码</td>
+            </tr>
+            {% for users in userInfo %}
+            <tr>
+                <td>{{users.user}}</td>
+                <td>{{users.password}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
     <form action="/signin" method="post">
         <p>Name: <input name="name" value="root"></p>
         <p>Password: <input name="password" type="password"></p>
