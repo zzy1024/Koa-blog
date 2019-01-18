@@ -1,5 +1,17 @@
-body{background:#fff; text-align: center;}
+*{margin:0;padding:0;}
+body{background:#fff; text-align: center;line-height: 1.8;}
 h1{color:#555;}
 .logo{width:300px;}
 .userTable{margin:0 auto;width:220px;}
 td{border:1px solid #ccc;margin-left:-1px;marign-top:-1px;}
+input{height:26px;}
+form p{margin-bottom:10px;}
+
+.regOrsign{width:810px;margin:20px auto;}
+.reg{float:left;width:390px;border: 1px solid #ccc;}
+.sign{float:left;margin-left:20px;width:390px;border:1px solid #ccc;}
+
+
+
+
+

@@ -6,24 +6,25 @@ module.exports = {
         ctx.response.body = `<h1>hello, ${name}!</h1>`;
     },
     index: async (ctx, next) => {
-        console.log('hello,world。');
         const userInfo = await query( 'SELECT * FROM users' );
             /*function () {
             let sql = 'SELECT * FROM users'
             let dataList = await query( sql )
         };*/
-            console.log(userInfo,userInfo.length);
         const s = await ctx.render('hello', {
             userName: 'GoGoGo',
             userInfo: userInfo
         });
-        console.log(s);
         /*ctx.response.body = `<h1>Index</h1>
         <form action="/signin" method="post">
             <p>Name: <input name="name" value="koa"></p>
             <p>Password: <input name="password" type="password"></p>
             <p><input type="submit" value="Submit"></p>
         </form>`;*/
+    },
+    reg: async (ctx, next) => {
+        console.log('user-password:',ctx.request.body.name, ctx.request.body.password);
+        ctx.response.body = `提交的user----password:,${ctx.request.body.name}, ${ctx.request.body.password}`;
     },
     signin: async (ctx, next) => {
         console.log(ctx.request.body.name, ctx.request.body.password);

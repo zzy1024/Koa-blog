@@ -7,6 +7,8 @@ module.exports = (app) => {
 
     router.post('/signin', homeController.signin);
 
+    router.post('/reg', homeController.reg);
+
     router.get('/hello/:name', homeController.helloName);
 
     /*router.get('/hello/:name', async (ctx, next) => {
