@@ -1,8 +1,11 @@
 const config = require('./config/index');
 const Koa = require('koa');
 const path = require('path');
+const session = require('koa-session-minimal');
+const MysqlStore = require('koa-mysql-session');
 const nunjucks = require('koa-nunjucks-2');
 const bodyParser = require('koa-bodyparser');
+
 // 引入 koa-static
 const staticFiles = require('koa-static');
 const router = require('./router/index');
@@ -10,6 +13,27 @@ const router = require('./router/index');
 const router = require('koa-router')();*/
 
 const app = new Koa();
+
+// session存储配置
+const sessionMysqlConfig= {
+    user: config.database.USERNAME,
+    password: config.database.PASSWORD,
+    database: config.database.DATABASE,
+    host: config.database.HOST,
+};
+
+// 配置session中间件
+app.use(session({
+    key: 'SESSION_ID',
+    cookie: {                       // 与 cookie 相关的配置
+        domain: 'localhost',                   // 写 cookie 所在的域名
+        path: '/signin',                    // 写 cookie 所在的路径
+        maxAge: 1000 * 60 * 10,       // cookie 有效时长(单位：ms)
+        httpOnly: true,               // 是否只用于 http 请求中获取
+        overwrite: true               // 是否允许重写
+    },
+    store: new MysqlStore(sessionMysqlConfig)
+}));
 
 // 指定 public目录为静态资源目录，用来存放 js css /koa2/images 等
 app.use(staticFiles(path.resolve(__dirname, "./public")))
@@ -28,41 +52,8 @@ app.use(async (ctx, next) => {
     await next();
 });
 
-/*router.get('/hello/:name', async (ctx, next) => {
-    let name = ctx.params.name;
-    ctx.response.body = `<h1>hello, ${name}!</h1>`;
-});
-
-router.get('/', async (ctx, next) => {
-    ctx.response.body = `<h1>Index</h1>
-        <form action="/signin" method="post">
-            <p>Name: <input name="name" value="koa"></p>
-            <p>Password: <input name="password" type="password"></p>
-            <p><input type="submit" value="Submit"></p>
-        </form>`;
-});
-
-router.post('/signin', async (ctx, next) => {
-    let name = ctx.request.body.name || '',
-        password = ctx.request.body.password || '';
-    console.log(`signin with name: ${name}, password: ${password}`);
-    if (name === 'koa' && password === '12345') {
-        ctx.response.body = `<h1>Welcome, ${name}!</h1>`;
-    } else {
-        ctx.response.body = `<h1>Login failed!</h1>
-        <p><a href="/">Password is error, try again!</a></p>`;
-    }
-});
-// add router middleware:
-app.use(router.routes());*/
 app.use(bodyParser());
 router(app);
-
-/*app.use(async (ctx, next) => {
-    await next();
-    ctx.response.type = 'text/html';
-    ctx.response.body = '<h1>Hello, koa2!</h1>' + `${ctx.request.method} : ${ctx.request.url}`;
-});*/
 
 app.listen(config.port);
 console.log('server is running at http://localhost:' + config.port);

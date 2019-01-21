@@ -1,4 +1,6 @@
 *{margin:0;padding:0;}
+.clr:after{display:block;clear:both;content:"";visibility:hidden;height:0}
+.clr{zoom:1}
 body{background:#fff; text-align: center;line-height: 1.8;}
 h1{color:#555;}
 .logo{width:300px;}
@@ -10,7 +12,6 @@ form p{margin-bottom:10px;}
 .regOrsign{width:810px;margin:20px auto;}
 .reg{float:left;width:390px;border: 1px solid #ccc;}
 .sign{float:left;margin-left:20px;width:390px;border:1px solid #ccc;}
-
 
 
 

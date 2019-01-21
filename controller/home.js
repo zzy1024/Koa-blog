@@ -1,4 +1,4 @@
-const {query} = require('../lib/mysql');
+const {query, findUserData} = require('../lib/mysql');
 
 module.exports = {
     helloName: async (ctx, next) => {
@@ -7,36 +7,58 @@ module.exports = {
     },
     index: async (ctx, next) => {
         const userInfo = await query( 'SELECT * FROM users' );
-            /*function () {
-            let sql = 'SELECT * FROM users'
-            let dataList = await query( sql )
-        };*/
         const s = await ctx.render('hello', {
             userName: 'GoGoGo',
             userInfo: userInfo
         });
-        /*ctx.response.body = `<h1>Index</h1>
-        <form action="/signin" method="post">
-            <p>Name: <input name="name" value="koa"></p>
-            <p>Password: <input name="password" type="password"></p>
-            <p><input type="submit" value="Submit"></p>
-        </form>`;*/
     },
     reg: async (ctx, next) => {
-        console.log('user-password:',ctx.request.body.name, ctx.request.body.password);
-        ctx.response.body = `提交的user----password:,${ctx.request.body.name}, ${ctx.request.body.password}`;
+        let user = {
+            name: ctx.request.body.name,
+            password: ctx.request.body.password
+        };
+        console.log('user-password:',user.name, user.password);
+        let findUser = '';
+        await findUserData(user.name).then(async (res) => {
+            console.log('search', res);
+            if(res.length){
+                ctx.response.body = `此账号已经存在！`;
+            }else if(user.name === '' || user.password === ''){
+                ctx.response.body = `帐号密码不能为空！`;
+            }else{
+                let _sql = "insert into users set name=?,password=?;";
+                await query(_sql, [user.name, user.password]).then(res => {
+                    if(res.affectedRows === 1){
+                        ctx.response.body = `注册完成，帐号：${user.name} ，密码：${user.password}`;
+                    }else{
+                        throw Error('未注册成功,请重试！');
+                    }
+                });
+            }
+        });
+
     },
     signin: async (ctx, next) => {
-        console.log(ctx.request.body.name, ctx.request.body.password);
-        let name = ctx.request.body.name || '',
-            password = ctx.request.body.password || '';
-        console.log(`signin with name: ${name}, password: ${password}`);
-        if (name === 'koa' && password === '12345') {
-            ctx.response.body = `<h1>Welcome, ${name}!</h1>`;
+        let user = {
+            name: ctx.request.body.name || '',
+            password: ctx.request.body.password || ''
+        };
+        console.log(`signin with name: ${user.name}, password: ${user.password}`);
+        await findUserData(user.name).then( async (res) => {
+            console.log('denglu', res);
+        if (user.name === res[0]['name'] && user.password === res[0]['password']) {
+            ctx.session.user = res[0]['name'];
+            ctx.session.id = res[0]['id'];
+            console.log('ctx.session.id', ctx.session.id);
+            console.log('session', ctx.session);
+            console.log('登录成功');
+            ctx.response.body = `<h1>Welcome, ${user.name}!</h1>session:${ctx.session.user} ---- ${ctx.session.id}`;
         } else {
             ctx.response.body = `<h1>Login failed!</h1>
                                 <p><a href="/">Password is error, try again!</a></p>`;
         }
+        });
+
     }
 
 };
