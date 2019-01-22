@@ -8,8 +8,8 @@ module.exports = {
     index: async (ctx, next) => {
         const userInfo = await query( 'SELECT * FROM users' );
         const s = await ctx.render('hello', {
-            userName: 'GoGoGo',
-            userInfo: userInfo
+            userInfo: userInfo,
+            userName: ctx.session.user
         });
     },
     reg: async (ctx, next) => {
