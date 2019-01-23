@@ -27,7 +27,7 @@ app.use(session({
     key: 'SESSION_ID',
     cookie: {                       // 与 cookie 相关的配置
         domain: 'localhost',                   // 写 cookie 所在的域名
-        path: '/signin',                    // 写 cookie 所在的路径
+        path: '/index',                    // 写 cookie 所在的路径
         maxAge: 1000 * 60 * 10,       // cookie 有效时长(单位：ms)
         httpOnly: true,               // 是否只用于 http 请求中获取
         overwrite: true               // 是否允许重写

@@ -5,10 +5,15 @@ module.exports = {
         let name = ctx.params.name;
         ctx.response.body = `<h1>hello, ${name}!</h1>`;
     },
-    index: async (ctx, next) => {
+    login: async (ctx, next) => {
         const userInfo = await query( 'SELECT * FROM users' );
-        const s = await ctx.render('hello', {
+        const s = await ctx.render('login', {
             userInfo: userInfo,
+            userName: ctx.session.user
+        });
+    },
+    index: async (ctx, next) => {
+        await ctx.render('index', {
             userName: ctx.session.user
         });
     },
@@ -45,17 +50,14 @@ module.exports = {
         };
         console.log(`signin with name: ${user.name}, password: ${user.password}`);
         await findUserData(user.name).then( async (res) => {
-            console.log('denglu', res);
             if(res.length){
                 if (user.name === res[0]['name'] && user.password === res[0]['password']) {
                     const session = ctx.session;
                     session.user = res[0]['name'];
+                    //Math.random().toString(36).substr(2)
                     session.id = res[0]['id'];
                     session.isLogin = true;
-                    console.log('ctx.session.id', ctx.session.id);
-                    console.log('ctx.session.name', ctx.session.name);
                     console.log('session', ctx.session);
-                    console.log('登录成功');
                     //ctx.response.body = `<h1>Welcome, ${user.name}!</h1>session:${ctx.session.user} ---- ${ctx.session.id}`;
                     ctx.response.body = {
                         'code': '1',

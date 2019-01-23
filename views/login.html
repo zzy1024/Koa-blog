@@ -65,6 +65,7 @@
             success: function(res){
                 if(res.code === '1'){
                     alert('登录成功');
+                    document.location.href='/index';
                 }else{
                     alert(res.msg);
                 }

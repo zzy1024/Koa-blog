@@ -3,13 +3,15 @@ const homeController = require('../controller/home');
 
 module.exports = (app) => {
 
-    router.get('/', homeController.index);
+    router.get('/', homeController.login);
 
     router.post('/signin', homeController.signin);
 
     router.post('/reg', homeController.reg);
 
     router.get('/hello/:name', homeController.helloName);
+
+    router.get('/index', homeController.index);
 
     /*router.get('/hello/:name', async (ctx, next) => {
         let name = ctx.params.name;
