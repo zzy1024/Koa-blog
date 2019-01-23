@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>hello页面</title>
     <link rel=stylesheet href="/css/hello.css" />
+    <script src="/js/jquery-3.3.1.min.js"></script>
 </head>
 <body>
     <img class="logo" width="300" src="/img/logo.png" />
@@ -21,9 +22,9 @@
         <div class="sign">
             <h2>登录：</h2>
             <form action="/signin" method="post">
-                <p>　　Name: <input name="name" value=""></p>
-                <p>Password: <input name="password" type="password"></p>
-                <p><input type="submit" value="Submit"></p>
+                <p>　　Name: <input name="name" value="" id="userName"></p>
+                <p>Password: <input name="password" type="password" id="userPass"></p>
+                <p><input type="submit" value="Submit" id="goSignBtn"></p>
             </form>
         </div>
     </div>
@@ -44,5 +45,33 @@
             {% endfor %}
         </table>
     </div>
+<script>
+    let goSignBtn = document.querySelector('#goSignBtn');
+    let userName = document.querySelector('#userName');
+    let userPass = document.querySelector('#userPass');
+    goSignBtn.onclick = function(){
+        const name = userName.value;
+        const pass = userPass.value;
+        console.log(name, pass);
+        if(name === '' || pass === ''){
+            alert('请输入账号或密码');
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/signin",
+            data: {name: name, password: pass},
+            dataType: "json",
+            success: function(res){
+                if(res.code === '1'){
+                    alert('登录成功');
+                }else{
+                    alert(res.msg);
+                }
+            }
+        });
+        return false;
+    };
+</script>
 </body>
 </html>

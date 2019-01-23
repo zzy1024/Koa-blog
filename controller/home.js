@@ -46,17 +46,38 @@ module.exports = {
         console.log(`signin with name: ${user.name}, password: ${user.password}`);
         await findUserData(user.name).then( async (res) => {
             console.log('denglu', res);
-        if (user.name === res[0]['name'] && user.password === res[0]['password']) {
-            ctx.session.user = res[0]['name'];
-            ctx.session.id = res[0]['id'];
-            console.log('ctx.session.id', ctx.session.id);
-            console.log('session', ctx.session);
-            console.log('登录成功');
-            ctx.response.body = `<h1>Welcome, ${user.name}!</h1>session:${ctx.session.user} ---- ${ctx.session.id}`;
-        } else {
-            ctx.response.body = `<h1>Login failed!</h1>
-                                <p><a href="/">Password is error, try again!</a></p>`;
-        }
+            if(res.length){
+                if (user.name === res[0]['name'] && user.password === res[0]['password']) {
+                    const session = ctx.session;
+                    session.user = res[0]['name'];
+                    session.id = res[0]['id'];
+                    session.isLogin = true;
+                    console.log('ctx.session.id', ctx.session.id);
+                    console.log('ctx.session.name', ctx.session.name);
+                    console.log('session', ctx.session);
+                    console.log('登录成功');
+                    //ctx.response.body = `<h1>Welcome, ${user.name}!</h1>session:${ctx.session.user} ---- ${ctx.session.id}`;
+                    ctx.response.body = {
+                        'code': '1',
+                        'data': user.name,
+                        'msg': '登录成功'
+                    };
+                } else {
+                    //ctx.response.body = `<h1>Login failed!</h1><p><a href="/">Password is error, try again!</a></p>`;
+                    ctx.response.body = {
+                        'code': '0',
+                        'data': '',
+                        'msg': '登录失败，账号或密码错误！'
+                    };
+                }
+            }else{
+                ctx.response.body = {
+                    'code': '0',
+                    'data': '',
+                    'msg': '没有该用户，请注册一个账户！'
+                };
+            }
+
         });
 
     }
